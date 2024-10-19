@@ -3,55 +3,117 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Perushengitysrytmi-harjoitus</title>
+  <title>Perushengitys</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-image: url('images/tausta.jpg');
+      background-size: cover;
+      text-align: center;
+      color: #fff;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .instructions {
+      margin-bottom: 20px;
+    }
+
+    .breathing-circle {
+      width: 100px;
+      height: 100px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      animation: breathing 8s ease-in-out infinite; /* 4s sisään ja 4s ulos */
+    }
+
+    @keyframes breathing {
+      0%, 100% {
+        transform: scale(1); /* Pallo on alkuperäisessä koossa */
+      }
+      50% {
+        transform: scale(1.5); /* Pallo laajenee */
+      }
+    }
+
+    .start-button, .back-button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1>Perushengitysrytmi-harjoitus</h1>
-    <p>Tässä harjoituksessa hengität sisään ja ulos 4 sekunnin ajan. Seuraa ohjeita ja hengitä syvään.</p>
-    <button id="start-button">Aloita harjoitus</button>
-    <div id="timer" style="display: none;">Jäljellä oleva aika: <span id="time-left">20</span> sekuntia</div>
-    <button id="back-button" style="display: none;">Palaa valikkoon</button>
-    <p id="reward-message" style="display: none; color: #4CAF50;">Olet ansainnut palkinnon!</p>
+    <h1>Perushengitys</h1>
+    <div class="instructions">
+      <p>Ohjeet: Hengitä sisään 4 sekunnin ajan, ja hengitä ulos 4 sekunnin ajan.</p>
+      <p>Seuraa animaatiota. Pallo laajenee sisäänhengityksen aikana ja supistuu uloshengityksen aikana.</p>
+    </div>
+    
+    <div class="breathing-circle hidden" id="breathingCircle"></div>
+    
+    <button class="start-button" id="startButton">Aloita harjoitus</button>
+    <button class="back-button hidden" id="backButton">Palaa valikkoon</button>
+    
+    <div id="timer" class="hidden"></div>
+
   </div>
 
   <script>
-    let startButton = document.getElementById('start-button');
-    let timerElement = document.getElementById('timer');
-    let timeLeftElement = document.getElementById('time-left');
-    let backButton = document.getElementById('back-button');
-    let rewardMessage = document.getElementById('reward-message');
+    const startButton = document.getElementById('startButton');
+    const backButton = document.getElementById('backButton');
+    const breathingCircle = document.getElementById('breathingCircle');
+    const timerDisplay = document.getElementById('timer');
+    
+    let totalTime = 32; // 32 sekuntia harjoituksen kesto
 
-    let timeLeft = 2; // Harjoituksen kesto 20 sekuntia
+    startButton.addEventListener('click', () => {
+      startButton.classList.add('hidden'); // Piilotetaan aloita nappi
+      breathingCircle.classList.remove('hidden'); // Näytetään hengitysanimaatio
+      startTimer(); // Käynnistetään ajastin
+    });
 
-    startButton.addEventListener('click', function() {
-      startButton.style.display = 'none';
-      timerElement.style.display = 'block';
-
-      let timer = setInterval(function() {
+    function startTimer() {
+      timerDisplay.classList.remove('hidden');
+      let timeLeft = totalTime;
+      const timer = setInterval(() => {
+        timerDisplay.textContent = `Aikaa jäljellä: ${timeLeft} sekuntia`;
         timeLeft--;
-        timeLeftElement.textContent = timeLeft;
 
-        if (timeLeft === 0) {
+        if (timeLeft < 0) {
           clearInterval(timer);
-          timerElement.style.display = 'none';
-          backButton.style.display = 'block';
-          rewardMessage.style.display = 'block'; // Näytetään palkintoilmoitus
-          addReward(); // Lisätään palkinto
+          endExercise();
         }
       }, 1000);
-    });
-
-    backButton.addEventListener('click', function() {
-      window.location.href = "index.html";
-    });
-
-    function addReward() {
-      let rewardCount = sessionStorage.getItem('rewardCount') || 0;
-      rewardCount++;
-      sessionStorage.setItem('rewardCount', rewardCount);
     }
+
+    function endExercise() {
+      breathingCircle.classList.add('hidden');
+      timerDisplay.classList.add('hidden');
+      backButton.classList.remove('hidden');
+    }
+
+    backButton.addEventListener('click', () => {
+      window.location.href = 'index.html'; // Palaa päävalikkoon
+    });
   </script>
 </body>
 </html>
