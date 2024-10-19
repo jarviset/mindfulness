@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perushengitysrytmi-harjoitus</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Perushengitysrytmi-harjoitus</h1>
+    <p>Tässä harjoituksessa hengität sisään ja ulos 4 sekunnin ajan. Seuraa ohjeita ja hengitä syvään.</p>
+    <button id="start-button">Aloita harjoitus</button>
+    <div id="timer" style="display: none;">Jäljellä oleva aika: <span id="time-left">20</span> sekuntia</div>
+    <button id="back-button" style="display: none;">Palaa valikkoon</button>
+    <p id="reward-message" style="display: none; color: #4CAF50;">Olet ansainnut palkinnon!</p>
+  </div>
+
+  <script>
+    let startButton = document.getElementById('start-button');
+    let timerElement = document.getElementById('timer');
+    let timeLeftElement = document.getElementById('time-left');
+    let backButton = document.getElementById('back-button');
+    let rewardMessage = document.getElementById('reward-message');
+
+    let timeLeft = 2; // Harjoituksen kesto 20 sekuntia
+
+    startButton.addEventListener('click', function() {
+      startButton.style.display = 'none';
+      timerElement.style.display = 'block';
+
+      let timer = setInterval(function() {
+        timeLeft--;
+        timeLeftElement.textContent = timeLeft;
+
+        if (timeLeft === 0) {
+          clearInterval(timer);
+          timerElement.style.display = 'none';
+          backButton.style.display = 'block';
+          rewardMessage.style.display = 'block'; // Näytetään palkintoilmoitus
+          addReward(); // Lisätään palkinto
+        }
+      }, 1000);
+    });
+
+    backButton.addEventListener('click', function() {
+      window.location.href = "index.html";
+    });
+
+    function addReward() {
+      let rewardCount = sessionStorage.getItem('rewardCount') || 0;
+      rewardCount++;
+      sessionStorage.setItem('rewardCount', rewardCount);
+    }
+  </script>
+</body>
+</html>
