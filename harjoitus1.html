@@ -26,20 +26,21 @@
       margin-bottom: 20px;
     }
 
-    .breathing-circle {
+    .breathing-image {
       width: 100px;
       height: 100px;
-      background-color: rgba(255, 255, 255, 0.8);
+      background-image: url('images/h1.png');
+      background-size: cover;
       border-radius: 50%;
-      animation: breathing 8s ease-in-out infinite; /* 4s sisään ja 4s ulos */
+      animation: breathing 8s ease-in-out infinite;
     }
 
     @keyframes breathing {
       0%, 100% {
-        transform: scale(1); /* Pallo on alkuperäisessä koossa */
+        transform: scale(1); /* Alkuperäinen koko */
       }
       50% {
-        transform: scale(1.5); /* Pallo laajenee */
+        transform: scale(1.5); /* Kuva suurenee hengityksen aikana */
       }
     }
 
@@ -58,56 +59,60 @@
       display: none;
     }
 
+    .counter {
+      font-size: 24px;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Perushengitys</h1>
     <div class="instructions">
-      <p>Ohjeet: Hengitä sisään 4 sekunnin ajan, ja hengitä ulos 4 sekunnin ajan.</p>
-      <p>Seuraa animaatiota. Pallo laajenee sisäänhengityksen aikana ja supistuu uloshengityksen aikana.</p>
+      <p>Ohjeet: Hengitä sisään 4 sekunnin ajan ja ulos 4 sekunnin ajan.</p>
+      <p>Seuraa animaatiota. Kuva suurenee sisäänhengityksen aikana ja pienenee uloshengityksen aikana.</p>
     </div>
+
+    <div class="breathing-image hidden" id="breathingImage"></div>
     
-    <div class="breathing-circle hidden" id="breathingCircle"></div>
-    
+    <div class="counter hidden" id="counter">4</div>
+
     <button class="start-button" id="startButton">Aloita harjoitus</button>
     <button class="back-button hidden" id="backButton">Palaa valikkoon</button>
     
-    <div id="timer" class="hidden"></div>
-
   </div>
 
   <script>
     const startButton = document.getElementById('startButton');
     const backButton = document.getElementById('backButton');
-    const breathingCircle = document.getElementById('breathingCircle');
-    const timerDisplay = document.getElementById('timer');
-    
-    let totalTime = 32; // 32 sekuntia harjoituksen kesto
+    const breathingImage = document.getElementById('breathingImage');
+    const counterDisplay = document.getElementById('counter');
+
+    let breathsLeft = 4; // Aloitusarvo hengityksille
 
     startButton.addEventListener('click', () => {
       startButton.classList.add('hidden'); // Piilotetaan aloita nappi
-      breathingCircle.classList.remove('hidden'); // Näytetään hengitysanimaatio
-      startTimer(); // Käynnistetään ajastin
+      breathingImage.classList.remove('hidden'); // Näytetään hengitysanimaatio
+      counterDisplay.classList.remove('hidden'); // Näytetään laskuri
+      startBreathing(); // Aloitetaan laskuri ja animaatio
     });
 
-    function startTimer() {
-      timerDisplay.classList.remove('hidden');
-      let timeLeft = totalTime;
-      const timer = setInterval(() => {
-        timerDisplay.textContent = `Aikaa jäljellä: ${timeLeft} sekuntia`;
-        timeLeft--;
-
-        if (timeLeft < 0) {
-          clearInterval(timer);
-          endExercise();
+    function startBreathing() {
+      const interval = setInterval(() => {
+        if (breathsLeft > 1) {
+          breathsLeft--;
+          counterDisplay.textContent = breathsLeft; // Näytetään jäljellä olevat hengitykset
+        } else {
+          counterDisplay.textContent = "Valmis"; // Kun viimeinen hengitys on tehty
+          clearInterval(interval); // Pysäytetään intervalli
+          setTimeout(endExercise, 2000); // 2 sekunnin kuluttua lopetetaan harjoitus
         }
-      }, 1000);
+      }, 8000); // Jokainen hengityskierros kestää 8 sekuntia (4s sisään, 4s ulos)
     }
 
     function endExercise() {
-      breathingCircle.classList.add('hidden');
-      timerDisplay.classList.add('hidden');
+      breathingImage.classList.add('hidden');
+      counterDisplay.classList.add('hidden');
       backButton.classList.remove('hidden');
     }
 
