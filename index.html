@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mindfulness-matka</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Valitse harjoitus</h1>
+    
+    <div class="icon-grid">
+      <!-- Ensimmäinen rivi harjoituksia -->
+      <div class="icon-item">
+        <a href="harjoitus1.html">
+          <img src="images/h1.png" alt="Perushengitysrytmi">
+        </a>
+        <p>Perushengitysrytmi</p>
+      </div>
+      <div class="icon-item">
+        <a href="harjoitus2.html">
+          <img src="images/h2.png" alt="Rauhoittava 4-7-8-hengitystekniikka">
+        </a>
+        <p>Rauhoittava 4-7-8-hengitystekniikka</p>
+      </div>
+      <div class="icon-item">
+        <a href="harjoitus3.html">
+          <img src="images/h3.png" alt="Rytmitetty musiikkihengitys">
+        </a>
+        <p>Rytmitetty musiikkihengitys</p>
+      </div>
+    </div>
+    
+    <!-- Toinen rivi harjoituksia -->
+    <div class="icon-grid">
+      <div class="icon-item">
+        <a href="harjoitus4.html">
+          <img src="images/h4.png" alt="Stressin vapauttava syvähengitys">
+        </a>
+        <p>Stressin vapauttava syvähengitys</p>
+      </div>
+      <div class="icon-item">
+        <a href="harjoitus5.html">
+          <img src="images/h5.png" alt="Hengitys ja kehotietoisuus">
+        </a>
+        <p>Hengitys ja kehotietoisuus</p>
+      </div>
+      <div class="icon-item">
+        <a href="harjoitus6.html">
+          <img src="images/h6.png" alt="Erikoisharjoitus">
+        </a>
+        <p>Erikoisharjoitus</p>
+      </div>
+    </div>
+
+    <!-- Viiva harjoitusten ja palkintojen väliin -->
+    <hr>
+
+    <!-- Palkintopisteet kuvina -->
+    <div id="reward-section">
+      <h2>Palkintopisteet:</h2>
+      <div id="reward-list" class="centered"></div> <!-- Palkintokuvat keskitettynä -->
+    </div>
+
+    <!-- Viiva ennen Meditaatiotaso-otsikkoa -->
+    <hr>
+
+    <!-- Meditaatiotaso -->
+    <div id="level-section">
+      <h2 id="level-title">Meditaatio-taso:</h2>
+      <img id="level-image" src="" alt="Meditaatiotaso" style="display: none;">
+    </div>
+  </div>
+
+  <script>
+    // Palkintojen ja tason nollaus ensimmäisellä sivulatauksella
+    if (!sessionStorage.getItem('hasVisited')) {
+      sessionStorage.setItem('rewardCount', 0);
+      sessionStorage.setItem('hasVisited', true); // Merkintä sivun latauksesta
+    }
+
+    // Päivitetään meditaatiotaso ja palkinnot sivun latauksen yhteydessä
+    window.onload = function () {
+      updateRewards();
+    };
+
+    function updateRewards() {
+      let rewardCount = sessionStorage.getItem('rewardCount') || 0;
+      let rewardList = document.getElementById('reward-list'); // Palkintolistalle
+      rewardList.innerHTML = ''; // Tyhjennetään ensin lista
+
+      // Näytetään palkintokuvat (coin.png)
+      for (let i = 0; i < rewardCount; i++) {
+        let reward = document.createElement('img');
+        reward.src = 'images/coin.png'; // Korvataan palkinto coin.png:llä
+        reward.classList.add('reward'); // Lisää luokka "reward" CSS-muotoilua varten
+        rewardList.appendChild(reward); // Lisätään kuva palkintolistaan
+      }
+
+      // Päivitetään tason kuva
+      updateLevelTitle(rewardCount);
+    }
+
+    function updateLevelTitle(rewardCount) {
+      let levelImage = document.getElementById('level-image');
+
+      // Meditaatiotason määrittäminen ansaittujen palkintojen perusteella
+      if (rewardCount >= 0 && rewardCount <= 2) {
+        levelImage.src = "images/aloittelija.png"; // Aloittelijan kuva
+      } else if (rewardCount >= 3 && rewardCount < 5) {
+        levelImage.src = "images/mielenmatkailija.png"; // Matkailijan kuva
+      } else if (rewardCount >= 5) { // Suurempi tai yhtäsuuri kuin 5
+        levelImage.src = "images/zenmestari.png"; // Mestarin kuva
+      } else {
+        levelImage.src = "";
+      }
+
+      // Näytetään kuva, jos tason kuva on asetettu
+      if (levelImage.src && levelImage.src !== window.location.href) {
+        levelImage.style.display = "block";
+      } else {
+        levelImage.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
