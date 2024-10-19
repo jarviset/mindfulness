@@ -32,9 +32,8 @@
       background-image: url('images/h1.png');
       background-size: cover;
       border-radius: 50%;
-      margin-bottom: 40px; /* Lisätään tilaa animaation ja laskurin väliin */
-      animation: breathing 8s ease-in-out;
-      animation-play-state: paused; /* Aluksi pysäytettynä */
+      margin-bottom: 40px; /* Tilaa animaation ja laskurin väliin */
+      animation: breathing 8s ease-in-out 4; /* 8s sykli, toistetaan 4 kertaa */
     }
 
     @keyframes breathing {
@@ -42,7 +41,7 @@
         transform: scale(1); /* Alkuperäinen koko */
       }
       50% {
-        transform: scale(2); /* 100% suurempi koko hengityksen aikana */
+        transform: scale(2); /* Kuva suurenee 100% */
       }
     }
 
@@ -90,7 +89,7 @@
         transform: scale(1);
       }
       to {
-        transform: scale(2); /* Kolikko kasvaa 50% suuremmaksi */
+        transform: scale(2); /* Kolikko kasvaa 100% */
       }
     }
   </style>
@@ -123,12 +122,11 @@
     const rewardText = document.getElementById('rewardText');
     const coinAnimation = document.getElementById('coinAnimation');
 
-    let breathsLeft = 4; // Aloitusarvo hengityksille
+    let breathsLeft = 4; // Hengitysten aloitusmäärä
 
     startButton.addEventListener('click', () => {
       startButton.classList.add('hidden'); // Piilotetaan aloita nappi
       breathingImage.classList.remove('hidden'); // Näytetään hengitysanimaatio
-      breathingImage.style.animationPlayState = "running"; // Käynnistetään animaatio
       counterDisplay.classList.remove('hidden'); // Näytetään laskuri
       counterText.classList.remove('hidden'); // Näytetään "Hengityksiä jäljellä" -teksti
       startBreathing(); // Aloitetaan laskuri ja animaatio
@@ -138,26 +136,24 @@
       const interval = setInterval(() => {
         if (breathsLeft > 1) {
           breathsLeft--;
-          counterDisplay.textContent = breathsLeft; // Näytetään jäljellä olevat hengitykset
+          counterDisplay.textContent = breathsLeft; // Päivitetään jäljellä olevat hengitykset
         } else {
-          counterDisplay.textContent = "Valmis"; // Kun viimeinen hengitys on tehty
-          clearInterval(interval); // Pysäytetään intervalli
-          breathingImage.style.animationPlayState = "paused"; // Lopetetaan hengitysanimaatio
-          setTimeout(showReward, 2000); // 2 sekunnin kuluttua näytetään kolikon ansaitseminen
+          counterDisplay.textContent = "Valmis"; // Viimeinen hengitys tehty
+          clearInterval(interval); // Pysäytetään laskuri
+          breathingImage.classList.add('hidden'); // Piilotetaan hengitysanimaatio
+          setTimeout(showReward, 2000); // 2 sekunnin tauko ennen kolikkoanimaatiota
         }
       }, 8000); // Jokainen hengityskierros kestää 8 sekuntia (4s sisään, 4s ulos)
     }
 
     function showReward() {
-      counterDisplay.classList.add('hidden');
-      counterText.classList.add('hidden');
       rewardText.classList.remove('hidden'); // Näytetään "Olet ansainnut kolikon"
       coinAnimation.classList.remove('hidden'); // Näytetään kolikko-animaatio
 
       setTimeout(() => {
         setTimeout(() => {
-          window.location.href = 'index.html'; // Palaa automaattisesti pääsivulle
-        }, 2000); // Kolikko pysyy näytössä 2 sekunnin ajan ennen siirtymistä
+          window.location.href = 'index.html'; // Siirrytään automaattisesti pääsivulle
+        }, 2000); // Kolikko pysyy näytössä 2 sekunnin ajan
       }, 1000); // Kolikko suurenee 1 sekunnin ajan
     }
   </script>
